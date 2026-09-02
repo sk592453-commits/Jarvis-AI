@@ -1,0 +1,6 @@
+SpeechRecognition==3.10.0
+sounddevice
+pyttsx3
+python-dotenv
+openai>=1.0.0
+google-genai

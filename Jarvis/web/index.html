@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>J.A.R.V.I.S // Neural Console</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">J</span><span>J.A.R.V.I.S</span></div>
+      <div class="connection"><span class="pulse"></span><span>LOCAL LINK</span></div>
+    </header>
+    <section class="workspace">
+      <section class="hero-panel">
+        <div class="eyebrow">PERSONAL INTELLIGENCE SYSTEM / 01</div>
+        <h1>Good to see you,<br><em>commander.</em></h1>
+        <p class="intro">Your local assistant is standing by. Ask anything, or use the microphone for a hands-free session.</p>
+        <div class="metrics"><div><span class="metric-value">24<span class="metric-unit">ms</span></span><span class="metric-label">LATENCY</span></div><div><span class="metric-value">99.8<span class="metric-unit">%</span></span><span class="metric-label">UPTIME</span></div><div><span class="metric-value">LOCAL</span><span class="metric-label">PROCESSING</span></div></div>
+      </section>
+      <section class="avatar-panel"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="avatar-core"><img id="avatar-image" class="avatar-image" src="/assets/avatar.png" alt="Jarvis avatar"><div class="avatar-fallback"><div class="avatar-face"><span class="eye left"></span><span class="eye right"></span><span class="mouth"></span></div></div></div><div class="avatar-caption"><span class="status-dot"></span><span id="status-text">LISTENING</span><span class="divider">//</span><span>AI CORE ONLINE</span></div></section>
+      <section class="console-panel">
+        <div class="panel-heading"><span>CONVERSATION LOG</span><span class="log-count" id="log-count">00</span></div>
+        <div class="messages" id="messages"><div class="empty-state">No active thread.<br><span>Start a conversation below.</span></div></div>
+        <form class="composer" id="composer"><button class="mic-button" id="mic-button" type="button" aria-label="Use microphone">◉</button><input id="message-input" autocomplete="off" placeholder="Send a message to Jarvis..."><button class="send-button" type="submit" aria-label="Send message">↗</button></form>
+        <div class="hint"><span>ENTER</span> to send <span>•</span> <span>MIC</span> for voice input</div>
+      </section>
+    </section>
+    <footer><span>NEURAL CONSOLE</span><span>BUILD 2.6.09</span><span>SECURE LOCAL SESSION</span></footer>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -1,5 +1,6 @@
 import speech_recognition as sr
 import sys
+import threading
 import time
 
 recognizer = sr.Recognizer()
@@ -24,6 +25,38 @@ except ImportError:
     TTS_AVAILABLE = False
 
 engine = None
+SPEAK_LOCK = threading.Lock()
+POST_SPEECH_DELAY = 0.8
+
+
+def select_indian_female_voice(current_engine):
+    """Prefer an installed Indian/Hindi female Windows voice."""
+    voices = current_engine.getProperty("voices") or []
+    preferred = ("heera", "kalpana", "india", "hindi", "en-in", "hi-in")
+    female = ("female", "zira", "susan", "hazel")
+
+    def voice_text(voice):
+        languages = getattr(voice, "languages", []) or []
+        return " ".join(str(value) for value in [
+            getattr(voice, "id", ""),
+            getattr(voice, "name", ""),
+            getattr(voice, "gender", ""),
+            *languages,
+        ]).lower()
+
+    for voice in voices:
+        details = voice_text(voice)
+        if any(token in details for token in preferred) and (
+            "male" not in details or "female" in details
+        ):
+            current_engine.setProperty("voice", voice.id)
+            return
+
+    for voice in voices:
+        details = voice_text(voice)
+        if any(token in details for token in female) and "male" not in details:
+            current_engine.setProperty("voice", voice.id)
+            return
 
 
 def get_engine():
@@ -36,6 +69,7 @@ def get_engine():
         try:
             engine = pyttsx3.init()
             engine.setProperty("rate", 160)
+            select_indian_female_voice(engine)
         except Exception:
             return None
 
@@ -44,20 +78,32 @@ def get_engine():
 
 def speak(text):
     """Speak text aloud using TTS if supported."""
+    global engine
+
     if not text:
         return
 
-    try:
-        current_engine = get_engine()
-        if current_engine is None:
-            print(f"JARVIS: {text}")
-            return
+    with SPEAK_LOCK:
+        for attempt in range(2):
+            try:
+                current_engine = get_engine()
+                if current_engine is None:
+                    print(f"JARVIS: {text}")
+                    return
 
-        current_engine.stop()
-        current_engine.say(text)
-        current_engine.runAndWait()
-    except Exception:
-        print(f"JARVIS: {text}")
+                current_engine.stop()
+                current_engine.say(text)
+                current_engine.runAndWait()
+                current_engine.stop()
+                engine = None
+                time.sleep(POST_SPEECH_DELAY)
+                return
+            except Exception:
+                engine = None
+                if attempt == 1:
+                    print(f"JARVIS: {text}")
+                else:
+                    time.sleep(0.1)
 
 
 def listen():

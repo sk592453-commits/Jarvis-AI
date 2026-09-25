@@ -1,0 +1,9 @@
+{
+  "name": "jarvis-node-ui",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Node.js web interface for the Python Jarvis assistant",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

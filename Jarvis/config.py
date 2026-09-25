@@ -1,1 +1,2 @@
-MODEL = "gpt-5.6-luna"
+PROVIDER = "gemini"
+MODEL = "gemini-3.6-flash"

@@ -1,6 +1,5 @@
 import os
 from dotenv import load_dotenv
-from openai import OpenAI
 from google import genai
 import warnings
 
@@ -23,6 +22,8 @@ openai_client = None
 gemini_client = None
 
 if OPENAI_API_KEY:
+    from openai import OpenAI
+
     openai_client = OpenAI(api_key=OPENAI_API_KEY)
 
 if GEMINI_API_KEY:
@@ -33,10 +34,10 @@ if GEMINI_API_KEY:
 # Select AI provider
 # --------------------------------------------------
 
-if OPENAI_API_KEY:
-    PROVIDER = "openai"
-elif GEMINI_API_KEY:
+if GEMINI_API_KEY:
     PROVIDER = "gemini"
+elif OPENAI_API_KEY:
+    PROVIDER = "openai"
 else:
     raise RuntimeError(
         "No API key found. Add OPENAI_API_KEY or GEMINI_API_KEY "
@@ -168,6 +169,11 @@ def ask_jarvis(user_message):
             print(f"OpenAI error: {str(e)[:50]}... Falling back to Gemini...")
             answer = ask_gemini(messages)
         else:
+            if "RESOURCE_EXHAUSTED" in str(e) or "429" in str(e):
+                raise RuntimeError(
+                    "Gemini API quota is exhausted. Wait for the quota reset "
+                    "or enable billing/use another Gemini project."
+                )
             raise RuntimeError(f"AI provider error: {str(e)}")
 
     # Save Jarvis's answer
